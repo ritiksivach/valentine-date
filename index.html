@@ -27,22 +27,11 @@
       animation: fadeIn 0.4s ease;
     }
 
-    h1, h2 {
-      margin-top: 0;
-    }
-
-    p {
-      color: #555;
-    }
-
     .options {
       display: grid;
       gap: 1rem;
       margin-top: 1.5rem;
     }
-    .hidden {
-  display: none;
-}
 
     button {
       padding: 1rem;
@@ -52,15 +41,7 @@
       cursor: pointer;
       background: #ff4d6d;
       color: white;
-      transition: transform 0.15s ease;
     }
-
-    button:hover {
-      transform: translateY(-2px);
-    }
-    #planSection {
-  animation: fadeIn 0.4s ease;
-}
 
     input {
       width: 100%;
@@ -81,8 +62,8 @@
       word-break: break-all;
     }
 
-    .heart {
-      font-size: 2rem;
+    .hidden {
+      display: none;
     }
 
     @keyframes fadeIn {
@@ -95,65 +76,46 @@
 
 <div id="app" class="card"></div>
 
-<!-- EMAILJS -->
-<!--<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>-->
-
 <script>
-  // 🔴 EMAILJS CONFIG — REPLACE THESE
-  emailjs.init("8-8i7etZqiqChJhx3");
-
   const state = {
     step: 0,
     answers: {},
     giftLinks: []
   };
+
   const romanticLines = [
-  "No matter what we do, my favorite part is doing it with you.",
-  "This date sounds perfect — mostly because it includes you.",
-  "Every plan feels better when I imagine you smiling across from me.",
-  "Somehow, even the simplest moments become special with you.",
-  "I don’t care where we go — as long as it’s together."
-];
+    "No matter what we do, my favorite part is doing it with you.",
+    "This date sounds perfect — mostly because it includes you.",
+    "Every plan feels better when I imagine you smiling across from me.",
+    "Somehow, even the simplest moments become special with you.",
+    "I don’t care where we go — as long as it’s together."
+  ];
 
   const steps = [
     {
       q: "Where should our date be?",
-      options: [
-        { label: "Indoor 🏠", value: "Indoor" },
-        { label: "Outdoor 🌿", value: "Outdoor" }
-      ]
+      options: ["Indoor 🏠", "Outdoor 🌿"]
     },
     {
       q: "What kind of vibe?",
-      options: [
-        { label: "Cozy ✨", value: "Cozy" },
-        { label: "Fancy 🍷", value: "Fancy" }
-      ]
+      options: ["Cozy ✨", "Fancy 🍷"]
     },
     {
       q: "What should we eat?",
-      options: [
-        { label: "Italian 🍝", value: "Italian" },
-        { label: "Chinese ", value: "Chinese" },
-        { label: "Asian 🍜", value: "Asian" },
-        { label: "Surprise 😏", value: "Surprise" }
-      ]
+      options: ["Italian 🍝", "Chinese 🥡", "Asian 🍜", "Surprise 😏"]
     }
   ];
 
   const app = document.getElementById("app");
 
   function render() {
-    app.innerHTML = "";
-
     if (state.step < steps.length) {
       const step = steps[state.step];
-
       app.innerHTML = `
-        <h1>${step.q}</h1>
+        <h2>${step.q}</h2>
         <div class="options">
           ${step.options.map(o =>
-            `<button onclick="selectOption('${o.value}')">${o.label}</button>`
+            `<button onclick="selectOption('${o}')">${o}</button>`
           ).join("")}
         </div>
       `;
@@ -168,45 +130,29 @@
     render();
   }
 
-function renderFinal() {
-  app.innerHTML = `
-    <div id="planSection">
-  <h2>Our Date Plan 💖</h2>
+  function renderFinal() {
+    app.innerHTML = `
+      <div id="planSection">
+        <h2>Our Date Plan 💖</h2>
+        <p>${state.answers[0]} • ${state.answers[1]} • ${state.answers[2]}</p>
+        <p style="font-style:italic;">
+          ${romanticLines[Math.floor(Math.random() * romanticLines.length)]}
+        </p>
+        <button onclick="showGiftSection()">Click me for more 💝</button>
+      </div>
+      <div id="giftSection" class="hidden"></div>
+    `;
+  }
 
-  <p>
-    ${state.answers[0]} • ${state.answers[1]} • ${state.answers[2]}
-  </p>
+  function showGiftSection() {
+    document.getElementById("planSection").style.display = "none";
+    const section = document.getElementById("giftSection");
+    section.classList.remove("hidden");
 
-  <p id="romanticLine" style="margin-top:1rem; font-style: italic;"></p>
+    section.innerHTML = `
+      <h3>Paste gift links 💕</h3>
 
-  <button class="secondary" onclick="showGiftSection()">
-    Click me for more 💝
-  </button>
-</div>
-
-<div id="giftSection" class="hidden"></div>
-
-  `;
-  document.getElementById("romanticLine").textContent =
-  romanticLines[Math.floor(Math.random() * romanticLines.length)];
-
-}
-
-function showGiftSection() {
-  document.getElementById("planSection").style.display = "none";
-
-  const section = document.getElementById("giftSection");
-  section.classList.remove("hidden");
-
-  renderGiftSection();
-}
-
-function renderGiftSection() {
-  document.getElementById("giftSection").innerHTML = `
-    <h3>Want some gifts?? Just paste the link here!! 💕</h3>
-
-    <p>Check these sites:</p>
-    <ul>
+      <ul>
       <li><a href="https://in.bookmyshow.com/explore/movies-noida" target="_blank">Movie Tickets</a></li>
       <li><a href="https://www.clovia.com/panties/sexy-panties/s/"> Perfumes </a></li>
       <li><a href="https://hunkemoller.in/collection/bras" target="_blank"> Airpods</a></li>
@@ -214,39 +160,18 @@ function renderGiftSection() {
       
     </ul>
 
-    <input id="giftInput" placeholder="Paste gift link here" />
-    <button onclick="addGiftLink()">Add Link</button>
+      <input id="giftInput" placeholder="Paste gift link here" />
+      <button onclick="addGiftLink()">Add Link</button>
 
-    <ul id="giftList"></ul>
+      <ul id="giftList"></ul>
 
-    <button onclick="sendEmail()">Send now!! 💌</button>
-  `;
-}
-function addGiftLink() {
-  const input = document.getElementById("giftInput");
-  if (!input.value) return;
+      <button onclick="sendEmail()">Send 💌</button>
+    `;
+  }
 
-  state.giftLinks.push(input.value);
-  input.value = "";
-  renderGiftList();
-}
-
-function renderGiftList() {
-  const list = document.getElementById("giftList");
-  list.innerHTML = "";
-
-  state.giftLinks.forEach(link => {
-    const li = document.createElement("li");
-    li.textContent = link;
-    list.appendChild(li);
-  });
-}
-
-
-  function addGift() {
+  function addGiftLink() {
     const input = document.getElementById("giftInput");
     if (!input.value) return;
-
     state.giftLinks.push(input.value);
     input.value = "";
     renderGiftList();
@@ -262,57 +187,33 @@ function renderGiftList() {
     });
   }
 
-  function sendEmailJs() {
-    const message = `
+  function sendEmail() {
+    if (!state.giftLinks.length) {
+      alert("Add at least one gift link 💝");
+      return;
+    }
+
+    fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        access_key: "YOUR_WEB3FORMS_ACCESS_KEY",
+        subject: "Valentine Date Plan 💖",
+        message: `
 Date Plan:
 ${state.answers[0]} | ${state.answers[1]} | ${state.answers[2]}
 
 Gift Links:
-${state.giftLinks.length ? state.giftLinks.join("\n") : "No links added"}
-`;
-
-    emailjs.send(
-      "service_s3h32gj",
-      "template_lpfvqok",
-      { message }
-    ).then(() => {
-      alert("Sent and ordered!!! Happy to help 💖");
-    }, () => {
-      alert("Please refresh and try again!Sorry for the trouble 😢");
+${state.giftLinks.join("\n")}
+        `
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) alert("Sent successfully 💖");
+      else alert("Something went wrong 😢");
     });
   }
-  function sendEmail() {
-  fetch("https://api.web3forms.com/submit", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      access_key: "d9aff4a9-8dce-499b-9492-ee3f435aa53f",
-      subject: "Valentine Date Plan 💖",
-      message: `
-Date Plan:
-${state.answers[0]} | ${state.answers[1]} | ${state.answers[2]}
-
-Gift Links:
-${state.giftLinks.length ? state.giftLinks.join("\n") : "No gifts added"}
-      `
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      alert("On it's way to be ordered!!! Thanks for your support💖");
-    } else {
-      alert("Please refresh and try again!Sorry for the trouble 😢");
-      console.error(data);
-    }
-  })
-  .catch(err => {
-    alert("Please refresh and try again!Sorry for the trouble 😢");
-    console.error(err);
-  });
-}
 
   render();
 </script>
