@@ -96,7 +96,7 @@
 <div id="app" class="card"></div>
 
 <!-- EMAILJS -->
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>-->
 
 <script>
   // 🔴 EMAILJS CONFIG — REPLACE THESE
@@ -262,7 +262,7 @@ function renderGiftList() {
     });
   }
 
-  function sendEmail() {
+  function sendEmailJs() {
     const message = `
 Date Plan:
 ${state.answers[0]} | ${state.answers[1]} | ${state.answers[2]}
@@ -281,6 +281,38 @@ ${state.giftLinks.length ? state.giftLinks.join("\n") : "No links added"}
       alert("Please refresh and try again!Sorry for the trouble 😢");
     });
   }
+  function sendEmail() {
+  fetch("https://api.web3forms.com/submit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      access_key: "d9aff4a9-8dce-499b-9492-ee3f435aa53f",
+      subject: "Valentine Date Plan 💖",
+      message: `
+Date Plan:
+${state.answers[0]} | ${state.answers[1]} | ${state.answers[2]}
+
+Gift Links:
+${state.giftLinks.length ? state.giftLinks.join("\n") : "No gifts added"}
+      `
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert("On it's way to be ordered!!! Thanks for your support💖");
+    } else {
+      alert("Please refresh and try again!Sorry for the trouble 😢");
+      console.error(data);
+    }
+  })
+  .catch(err => {
+    alert("Please refresh and try again!Sorry for the trouble 😢");
+    console.error(err);
+  });
+}
 
   render();
 </script>
