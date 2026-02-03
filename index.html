@@ -187,9 +187,9 @@
     });
   }
 
-  function sendEmail() {
+  function sendEmaildummy() {
     if (!state.giftLinks.length) {
-      alert("Add at least one gift link 💝");
+      alert("Please add something 💝");
       return;
     }
 
@@ -210,13 +210,45 @@ ${state.giftLinks.join("\n")}
     })
     .then(res => res.json())
     .then(data => {
-      if (data.success) alert("Sent successfully 💖");
-      else alert("Something went wrong 😢");
+      if (data.success) alert("On it's way to be ordered!!! Thanks for your support💖");
+      else alert("Please refresh and try again!Sorry for the trouble 😢");
     });
   }
 
+
+
+  function sendEmail() {
+  if (!state.giftLinks.length) {
+    alert("Add at least one gift link 💝");
+    return;
+  }
+
+  const message = `
+Date Plan:
+${state.answers[0]} | ${state.answers[1]} | ${state.answers[2]}
+
+Gift Links:
+${state.giftLinks.join("\n")}
+  `;
+
+  document.getElementById("web3Message").value = message;
+  document.getElementById("web3form").submit();
+
+  alert("Sent successfully 💖");
+}
+
   render();
 </script>
+<form
+  id="web3form"
+  action="https://api.web3forms.com/submit"
+  method="POST"
+  class="hidden"
+>
+  <input type="hidden" name="access_key" value="d9aff4a9-8dce-499b-9492-ee3f435aa53f">
+  <input type="hidden" name="subject" value="Valentine Date Plan 💖">
+  <textarea name="message" id="web3Message"></textarea>
+</form>
 
 </body>
 </html>
